@@ -2,7 +2,12 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { UsersController } from './users/users.controller';
+import { UserModule } from './user/user.module';
 import * as config from '../../../config';
+import { join } from 'path';
+import { AuthGuard } from './auth/auth.service';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -13,11 +18,12 @@ import * as config from '../../../config';
       username: config.mysqlDB.user,
       password: config.mysqlDB.pass,
       database: config.mysqlDB.database,
-      entities: [],
+      entities: [join(__dirname, '**', '*.entity.{ts,js}')],
       retryAttempts: 5,
     }),
+    UserModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [AppController, UsersController],
+  providers: [AppService, AuthGuard, JwtService],
 })
 export class AppModule {}
