@@ -7,14 +7,13 @@ import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.use(cookieParser());
-  
   app.enableCors({
-	origin: 'http://localhost:4200', // Replace with your frontend domain
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    origin: 'http://localhost:4200',
     credentials: true,
+    // methods: ['GET', 'POST'],
   });
 
+  app.use(cookieParser());
   app.use(
     session({
       key: config.env.sessionKey,
@@ -27,19 +26,19 @@ async function bootstrap() {
     }),
   );
 
-    // app.use(function (req, res, next) {
-    //   const token = req.cookies['token'];
-    //   // if (token) {
-    //   //   res.setHeader('Authorization', `Bearer ${token}`);
-    //   // }
-    //   // onHeaders(res, () => {
-    //   if (token) {
-    //     req.headers.authorization = `Bearer ${token}`;
-    //   }
-    //   // });
+  // app.use(function (req, res, next) {
+  //   const token = req.cookies['token'];
+  //   // if (token) {
+  //   //   res.setHeader('Authorization', `Bearer ${token}`);
+  //   // }
+  //   // onHeaders(res, () => {
+  //   if (token) {
+  //     req.headers.authorization = `Bearer ${token}`;
+  //   }
+  //   // });
 
-    //   next();
-    // });
+  //   next();
+  // });
   await app.listen(config.env.nestport);
 }
 bootstrap();
