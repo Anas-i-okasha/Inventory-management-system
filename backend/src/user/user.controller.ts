@@ -4,8 +4,6 @@ import {
   Post,
   Body,
   Patch,
-  Param,
-  Delete,
   UnauthorizedException,
   Req,
   Res,
@@ -26,11 +24,7 @@ export class UserController {
   ) {}
 
   @Post('login')
-  async login(
-    @Body() user,
-    @Req() req: any,
-    @Res({ passthrough: true }) response: Response,
-  ) {
+  async login(@Body() user, @Req() req: any, @Res() res: Response) {
     let loginResult = { res: null, err: null };
     loginResult = await this.userService.login(user);
     if (loginResult.err == 'not_found') {
@@ -42,7 +36,9 @@ export class UserController {
       delete loginResult.res[0].password;
       const payload = { user: loginResult.res[0] };
       const jwt = await this.jwtService.signAsync(payload);
-      response.cookie('token', jwt, { httpOnly: true });
+      //   res.cookie('token', jwt, { httpOnly: true});
+      res.cookie('token', jwt, { httpOnly: true, secure: true });
+
       req.session.user = JSON.parse(JSON.stringify(loginResult.res));
       return loginResult.res;
     }
@@ -74,20 +70,5 @@ export class UserController {
     const res = request.headers;
     const cookie = request.cookies['token'];
     // return this.userService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    // return this.userService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    // return this.userService.update(+id, updateUserDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    // return this.userService.remove(+id);
   }
 }

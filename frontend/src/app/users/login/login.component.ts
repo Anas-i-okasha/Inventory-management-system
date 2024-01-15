@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { UsersService } from '../users.service';
+import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -10,7 +12,9 @@ import { UsersService } from '../users.service';
 export class LoginComponent implements OnInit {
 
   constructor(
-    private userService: UsersService
+    private userService: UsersService,
+    private http: HttpClient,
+    private route: Router
   ) { }
 
   ngOnInit(): void {
@@ -18,12 +22,17 @@ export class LoginComponent implements OnInit {
   }
 
   onLogin(form: NgForm) {
-    const email    = form.value.email;
-	const password = form.value.password;
-
-    this.userService.login({email, password}).subscribe((data: any)=>{
-      console.log(data);
-    })
+    // const email    = form.value.email;
+	// const password = form.value.password;
+    const user = {
+        email: form.value.email,
+        password: form.value.password
+    }
+    this.http.post('http://localhost:5000/user/login', user, {withCredentials: true}).subscribe(res => this.route.navigate(['/']))
+    // this.userService.login({email, password}).subscribe((data: any )=>{
+    //   console.log(data);
+    //   localStorage.setItem('user', data[0]);
+    // })
   }
 
 }

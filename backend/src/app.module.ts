@@ -8,6 +8,8 @@ import * as config from '../../../config';
 import { join } from 'path';
 import { AuthGuard } from './auth/auth.service';
 import { JwtService } from '@nestjs/jwt';
+import { ProductsModule } from './products/products.module';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -20,8 +22,14 @@ import { JwtService } from '@nestjs/jwt';
       database: config.mysqlDB.database,
       entities: [join(__dirname, '**', '*.entity.{ts,js}')],
       retryAttempts: 5,
+      //synchronize
     }),
     UserModule,
+    ProductsModule,
+    JwtModule.register({
+      secret: config.env.secret,
+      signOptions: { expiresIn: '7d' },
+    }),
   ],
   controllers: [AppController, UsersController],
   providers: [AppService, AuthGuard, JwtService],
