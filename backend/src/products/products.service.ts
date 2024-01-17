@@ -17,8 +17,8 @@ export class ProductsService {
       if (!response)
         throw new NotFoundException(`Product with ID ${productId} not found`);
       return response;
-    } catch (ex) {
-      throw ex;
+    } catch (err) {
+      throw err;
     }
   }
 
@@ -29,8 +29,8 @@ export class ProductsService {
         .select('*')
         .orderBy('id', 'ASC')
         .getRawMany();
-    } catch (ex) {
-      throw ex;
+    } catch (err) {
+      throw err;
     }
   }
 
@@ -38,8 +38,8 @@ export class ProductsService {
     try {
       const result = await this.productsRepository.save(productDto);
       return result;
-    } catch (ex) {
-      throw ex;
+    } catch (err) {
+      throw err;
     }
   }
 
@@ -51,8 +51,8 @@ export class ProductsService {
         .where('id =:id', { id })
         .execute();
       return result.affected;
-    } catch (ex) {
-      throw ex;
+    } catch (err) {
+      throw err;
     }
   }
 
@@ -64,8 +64,8 @@ export class ProductsService {
       // Save the updated product to the database
       await this.productsRepository.save(product);
       return product;
-    } catch (ex) {
-      throw ex;
+    } catch (err) {
+      throw err;
     }
   }
 }

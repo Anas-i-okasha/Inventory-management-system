@@ -20,7 +20,10 @@ export class LoginComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    console.log('anas')
+    
+    const isLoggedIn = this.userService.getCurrentUser();
+    if (!isLoggedIn)
+      return this.route.navigate(['/']);
   }
 
   onLogin(form: NgForm) {
@@ -33,14 +36,15 @@ export class LoginComponent implements OnInit {
     this.userService.login(user).subscribe((data: any ) => {
       switch (data.api_status) {
         case 1:
-          'login successfully'
+          'login successfully';
+          // set in localStorage
           this.userService.setCurrentUser(data.userInfo);
           break;
         case 2:
-          ''
+          'check you email or password'
           break;
         case 3:
-          ''
+          'user dose not exist please Sign up';
           break;
 
       }

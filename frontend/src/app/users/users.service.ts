@@ -24,8 +24,26 @@ export class UsersService {
 		this.currentUserSubject.next(user);
 	}
 
+  getCurrentUser() {
+		let info = this.currentUserSubject?.value;
+		if (!info || !info.id) {
+			const userInfo = localStorage.getItem('userInfo') || '';
+			if (!userInfo) { return false; }
+			info = JSON.parse(userInfo);
+
+			if (info && info.id) {
+				this.currentUserSubject.next(info);
+			}
+		}
+		return info;
+	}
+
 
   login(user: User) {
     return this.httpClient.post(`${this.baseURL}/login`, user, {withCredentials: true});
+  }
+
+  userRegister(user: UserInfo) {
+    return this.httpClient.post(`${this.baseURL}/register`, user);
   }
 }

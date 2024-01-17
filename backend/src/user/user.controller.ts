@@ -7,14 +7,12 @@ import {
   UnauthorizedException,
   Req,
   Res,
-  UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
-import { AuthGuard } from 'src/auth/auth.service';
 
 @Controller('user')
 export class UserController {
@@ -30,7 +28,9 @@ export class UserController {
     @Res({ passthrough: true }) response: Response,
   ) {
     let loginResult = { res: null, err: null };
+
     loginResult = await this.userService.login(user);
+
     if (loginResult.err == 'not_found') {
       return 'login_failed';
     } else if (loginResult.err == 'check_email_or_password') {
@@ -39,6 +39,7 @@ export class UserController {
       // don't return password in userInfo
       delete loginResult.res.password;
       const payload = { user: loginResult.res };
+      // generate JWT and store in cookies
       const jwt = await this.jwtService.signAsync(payload);
       response.cookie('auth-token', jwt, { httpOnly: true });
 
@@ -65,13 +66,5 @@ export class UserController {
     req.session.destroy(() => {
       return 1;
     });
-  }
-
-  @UseGuards(AuthGuard)
-  @Get('user')
-  async findAll(@Req() request) {
-    const res = request.headers;
-    const cookie = request.cookies['token'];
-    // return this.userService.findAll();
   }
 }

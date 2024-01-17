@@ -14,7 +14,7 @@ import { ProductsService } from './products.service';
 import { AuthGuard } from 'src/auth/auth.service';
 import { CreateProductDto, UpdateProductDto } from './dto/product.dto';
 
-// @UseGuards(AuthGuard) // for all APIs inside the controller
+@UseGuards(AuthGuard) // for all APIs inside the controller
 @Controller('products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
