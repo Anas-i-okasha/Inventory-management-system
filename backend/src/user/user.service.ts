@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+// import { CreateUserDto } from './dto/create-user.dto';
 import { UsersEntity } from './user.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -25,7 +24,14 @@ export class UserService {
   async insertNewUser(user: any) {
     try {
       user.password = await bcrypt.hash(user.password, config.env.salt);
-      return await this.userRepository.save(user);
+      return (
+        await this.userRepository
+          .createQueryBuilder()
+          .insert()
+          .values(user)
+          .returning('id, email')
+          .execute()
+      ).raw[0];
     } catch (err) {
       throw new err();
     }
@@ -34,17 +40,14 @@ export class UserService {
   async login(user: any) {
     try {
       const email = user.email.toLowerCase().trim();
-      const db = await this.userRepository.createQueryBuilder().select('*');
+      const userInfo = await this.checkUserExist(email);
+      if (!userInfo) return { err: 'not_found', res: null };
 
-      db.where('email = :email', { email });
-      const userInfo = await db.getRawMany();
-
-      if (!userInfo.length) return { err: 'not_found', res: null };
-      if (!(await bcrypt.compare(user.password, userInfo[0].password)))
+      if (await bcrypt.compare(user.password, userInfo.password))
         return { err: 'check_email_or_password', res: null };
       return { err: null, res: userInfo };
     } catch (err) {
-      throw new err();
+      throw err;
     }
   }
   //   create(createUserDto: CreateUserDto) {

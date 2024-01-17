@@ -1,32 +1,27 @@
-<div class="row m-0">
-	<div class="col-md-5 px-5 mb-5 pb-5">
-		<div class="h-100 px-5">
-			<div class="row h-100 justify-content-center align-items-center">
-				<form class="col-12" (ngSubmit)="f.form.valid && onLogin(f)" #f="ngForm">
-					<!-- <div class="mb-5 pb-5"><img src="/sctportal{{loginLogo}}" alt="IoTAh" width="200px"></div> -->
-					<div class="form-group">
-						<h4>{{'login_register.log_in' }}</h4>
-					</div>
-					<div class="form-group">
-						<input type="email" name="email" ngModel #email="ngModel" required class="form-control rounded" placeholder="{{'login_register.email' }}">
-					</div>
-					<div class="form-group">
-						<input type="password" name="password" ngModel #password="ngModel" required class="form-control rounded" placeholder="{{'g.password' }}" show-password>
-					</div>
-					<div class="form-group">
-						<a class="text-secondary" routerLink="/forgot-password"><small>{{'login_register.forgot_password' }}?</small></a>
-					</div>
-					<div class="form-group">
-						<button type="submit" class="btn btn-primary btn-block rounded">{{'login_register.login' }}</button>
-					</div>
-					<div class="form-group">
-						<a routerLink="/register">{{'login_register.register_new_account' }}</a>
-					</div>
-				</form>
-			</div>
+<div class="container mt-5">
+	<div class="row justify-content-center">
+	  <div class="col-md-6">
+		<div class="card">
+		  <div class="card-header">
+			<h4>Login</h4>
+		  </div>
+		  <div class="card-body">
+			<form (ngSubmit)="f.form.valid && onLogin(f)" #f="ngForm">
+			  <div class="mb-3">
+				<label for="email" class="form-label">Email</label>
+				<input type="email" name="email" ngModel #email="ngModel" required class="form-control rounded" placeholder="Email">
+			  </div>
+			  <div class="mb-3">
+				<label for="password" class="form-label">Password</label>
+				<input type="password" name="password" ngModel #password="ngModel" required class="form-control rounded" required placeholder="Password">
+			  </div>
+			  <button type="submit" class="btn btn-primary">Login</button>
+			</form>
+			<div class="mt-3">
+                <p>Don't have an account? <a routerLink="/register">Register here</a></p>
+              </div>
+		  </div>
 		</div>
+	  </div>
 	</div>
-	<div class="col-md-7 d-none d-md-block p-0">
-		<!-- <div [ngClass]="loginImg"></div> -->
-	</div>
-</div>
+  </div>

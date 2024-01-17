@@ -1,0 +1,37 @@
+<div class="container mt-5">
+  <h2>Product List</h2>
+  <div class="pb-2">
+    <button class="btn btn-primary" type="button" [routerLink]="[0, 'edit']">
+        Add New Item
+    </button>
+</div>
+  <table class="table" *ngIf="products.length > 0; else noData">
+    <thead>
+      <tr>
+        <th scope="col">Product Name</th>
+        <th scope="col">Price</th>
+        <th scope="col">Quantity</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let product of products">
+        <td>{{ product.name }}</td>
+        <td>{{ product.price | currency }}</td>
+        <td>{{ product.quantity }}</td>
+        <td>
+          <button class="btn btn-primary" (click)="editProduct(product)">
+            Edit
+          </button>
+          <button class="btn btn-danger" (click)="deleteProduct(product.id)">
+            Delete
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<ng-template #noData>
+	<div class="alert alert-info">No Data To Show</div>
+</ng-template>
