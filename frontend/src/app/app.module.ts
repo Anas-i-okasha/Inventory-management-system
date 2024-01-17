@@ -5,14 +5,24 @@ import { AppComponent } from './app.component';
 import { RegisterComponent } from './users/register/register.component';
 import { LoginComponent } from './users/login/login.component';
 import { AppRoutingModule } from './app-routing.module';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { ProductsComponent } from './products/products.component';
 import { ProductsEditComponent } from './products-edit/products-edit.component';
+import { LoggerInterceptor } from './service/logger.interceptor';
 
 @NgModule({
-  declarations: [AppComponent, RegisterComponent, LoginComponent, ProductsComponent, ProductsEditComponent],
+  declarations: [
+    AppComponent,
+    RegisterComponent,
+    LoginComponent,
+    ProductsComponent,
+    ProductsEditComponent,
+  ],
   imports: [BrowserModule, FormsModule, AppRoutingModule, HttpClientModule],
-  providers: [],
+  // using intercepter to set token in headers
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: LoggerInterceptor, multi: true },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

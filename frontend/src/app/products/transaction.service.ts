@@ -17,7 +17,6 @@ export class TransactionService {
   }
 
   addItem(productDto: any) {
-    debugger;
     return this.httpClient.post(`${this.baseURL}/add-new-product`, productDto);
   }
 }

@@ -20,7 +20,9 @@ export class ProductsEditComponent implements OnInit {
 
   addItem() {
     this.transactionService.addItem(this.product).subscribe((res) => {
-
+      if (res == 1)
+        return 'item addedd successfully';
+      return 'global error mesg'
     })
   }
 

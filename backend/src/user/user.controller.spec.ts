@@ -49,9 +49,12 @@ describe('UserController', () => {
         'userEntityFactory',
       );
 
-      jest.spyOn(UserService.prototype, 'checkUserExist').mockResolvedValue(user);
+      jest
+        .spyOn(UserService.prototype, 'checkUserExist')
+        .mockResolvedValue(user);
+        
       const result = await controller.login(user, null, null);
-      expect(result).toBe('login_failed')
+      expect(result).toBe('login_failed');
     });
   });
 });
