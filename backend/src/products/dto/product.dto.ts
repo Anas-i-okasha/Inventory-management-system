@@ -10,6 +10,7 @@ export class CreateProductDto {
   price: number;
 
   @IsNumber()
+  @IsNotEmpty()
   stock_quantity: number;
 }
 

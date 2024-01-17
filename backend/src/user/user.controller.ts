@@ -8,10 +8,10 @@ import {
   Req,
   Res,
   UseGuards,
+  ValidationPipe,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
 import { AuthGuard } from 'src/auth/auth.service';
@@ -24,7 +24,11 @@ export class UserController {
   ) {}
 
   @Post('login')
-  async login(@Body() user, @Req() req: any, @Res() res: Response) {
+  async login(
+    @Body(ValidationPipe) user: CreateUserDto,
+    @Req() req: any,
+    @Res({ passthrough: true }) response: Response,
+  ) {
     let loginResult = { res: null, err: null };
     loginResult = await this.userService.login(user);
     if (loginResult.err == 'not_found') {
@@ -33,11 +37,10 @@ export class UserController {
       return 'signup';
     } else {
       // don't return password in userInfo
-      delete loginResult.res[0].password;
-      const payload = { user: loginResult.res[0] };
+      delete loginResult.res.password;
+      const payload = { user: loginResult.res };
       const jwt = await this.jwtService.signAsync(payload);
-      //   res.cookie('token', jwt, { httpOnly: true});
-      res.cookie('token', jwt, { httpOnly: true, secure: true });
+      response.cookie('auth-token', jwt, { httpOnly: true });
 
       req.session.user = JSON.parse(JSON.stringify(loginResult.res));
       return loginResult.res;
@@ -45,7 +48,7 @@ export class UserController {
   }
 
   @Post('register')
-  async register(@Body() user) {
+  async register(@Body(ValidationPipe) user: CreateUserDto) {
     if (!user) throw new UnauthorizedException();
 
     const userExist = await this.userService.checkUserExist(user.email);
@@ -58,7 +61,7 @@ export class UserController {
   async logout(@Req() req, @Res({ passthrough: true }) response: Response) {
     if (!req.session) return 1;
 
-    response.clearCookie('token');
+    response.clearCookie('auth-token');
     req.session.destroy(() => {
       return 1;
     });

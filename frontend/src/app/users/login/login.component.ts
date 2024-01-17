@@ -3,6 +3,7 @@ import { NgForm } from '@angular/forms';
 import { UsersService } from '../users.service';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { User } from '../user.model';
 
 @Component({
   selector: 'app-login',
@@ -13,26 +14,37 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private userService: UsersService,
-    private http: HttpClient,
+    
+    // private translateService: TranslateService,
     private route: Router
   ) { }
 
-  ngOnInit(): void {
+  ngOnInit() {
     console.log('anas')
   }
 
   onLogin(form: NgForm) {
-    // const email    = form.value.email;
-	// const password = form.value.password;
-    const user = {
+    
+    const user: User = {
         email: form.value.email,
         password: form.value.password
     }
-    this.http.post('http://localhost:5000/user/login', user, {withCredentials: true}).subscribe(res => this.route.navigate(['/']))
-    // this.userService.login({email, password}).subscribe((data: any )=>{
-    //   console.log(data);
-    //   localStorage.setItem('user', data[0]);
-    // })
+
+    this.userService.login(user).subscribe((data: any ) => {
+      switch (data.api_status) {
+        case 1:
+          'login successfully'
+          this.userService.setCurrentUser(data.userInfo);
+          break;
+        case 2:
+          ''
+          break;
+        case 3:
+          ''
+          break;
+
+      }
+    })
   }
 
 }

@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UsersController } from './users/users.controller';
+// import { UsersController } from './users/users.controller';
 import { UserModule } from './user/user.module';
 import * as config from '../../../config';
 import { join } from 'path';
@@ -31,7 +31,7 @@ import { JwtModule } from '@nestjs/jwt';
       signOptions: { expiresIn: '7d' },
     }),
   ],
-  controllers: [AppController, UsersController],
+  controllers: [AppController],
   providers: [AppService, AuthGuard, JwtService],
 })
 export class AppModule {}
